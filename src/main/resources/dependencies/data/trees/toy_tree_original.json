@@ -1,0 +1,234 @@
+{
+    "name": "root",
+    "taxon": "root",
+    "children": [
+	        {
+				"name": "node1",
+				"taxon": "Homininae",
+				"seq_length": 3418,
+				"domains": [
+					{
+						"evalue": "3.1e-22",
+						"name": "Tower",
+						"domain_start": "2831",
+						"id": "PF09121.5",
+						"domain_stop": "2872"
+					},
+					{
+						"evalue": "9.6e-102",
+						"name": "BRCA-2_helical",
+						"domain_start": "2479",
+						"id": "PF09169.5",
+						"domain_stop": "2667"
+					},
+					{
+						"evalue": "1.7e-63",
+						"name": "BRCA-2_OB3",
+						"domain_start": "3052",
+						"id": "PF09104.5",
+						"domain_stop": "3190"
+					},
+					{
+						"evalue": "0.00000000004",
+						"name": "BRCA2",
+						"domain_start": "1837",
+						"id": "PF00634.13",
+						"domain_stop": "1869"
+					}
+				],
+				"children": [
+					{
+						"name": "Human",
+						"taxon": "Homo_sapiens",
+						"seq_length": 3418,
+						"domains": [
+							{
+								"evalue": "3.1e-22",
+								"name": "Tower",
+								"domain_start": "2831",
+								"id": "PF09121.5",
+								"domain_stop": "2872"
+							},
+							{
+								"evalue": "9.6e-102",
+								"name": "BRCA-2_helical",
+								"domain_start": "2479",
+								"id": "PF09169.5",
+								"domain_stop": "2667"
+							},
+							{
+								"evalue": "1.7e-63",
+								"name": "BRCA-2_OB3",
+								"domain_start": "3052",
+								"id": "PF09104.5",
+								"domain_stop": "3190"
+							},
+							{
+								"evalue": "0.00000000004",
+								"name": "BRCA2",
+								"domain_start": "1837",
+								"id": "PF00634.13",
+								"domain_stop": "1869"
+							}
+						],
+						"binary_alignment": "00000000000000000100000000000000100000000000000000100000000000000100011000011111011100101100101000000"
+					},
+					{
+						"name": "Chimpanzee",
+						"taxon": "Pan_troglodytes",
+						"seq_length": 3418,
+						"domains": [
+							{
+								"evalue": "3.1e-22",
+								"name": "Tower",
+								"domain_start": "2831",
+								"id": "PF09121.5",
+								"domain_stop": "2872"
+							},
+							{
+								"evalue": "9.6e-102",
+								"name": "BRCA-2_helical",
+								"domain_start": "2479",
+								"id": "PF09169.5",
+								"domain_stop": "2667"
+							},
+							{
+								"evalue": "1.7e-63",
+								"name": "BRCA-2_OB3",
+								"domain_start": "3052",
+								"id": "PF09104.5",
+								"domain_stop": "3190"
+							},
+							{
+								"evalue": "0.00000000004",
+								"name": "BRCA2",
+								"domain_start": "1837",
+								"id": "PF00634.13",
+								"domain_stop": "1869"
+							}
+						],
+						"binary_alignment": "00000000000000000100000000000000100000000000000000100000000000000100011000011111011100101100101000000"
+					}
+				]
+				},
+        {
+            "name": "node2",
+            "taxon": "Glires",
+            "children": [
+                {
+                    "name": "node3",
+                    "children": [
+                        {
+                            "name": "Rat",
+                            "binary_alignment": "00000000000000000100000000000000100000000000000000100000000000000100011000011111011100101100101000000",
+                            "seq_length": 3418,
+                            "domains": [
+                                {
+                                    "evalue": "3.1e-22",
+                                    "name": "Tower",
+                                    "domain_start": "2831",
+                                    "id": "PF09121.5",
+                                    "domain_stop": "2872"
+                                },
+                                {
+                                    "evalue": "9.6e-102",
+                                    "name": "BRCA-2_helical",
+                                    "domain_start": "2479",
+                                    "id": "PF09169.5",
+                                    "domain_stop": "2667"
+                                },
+                                {
+                                    "evalue": "1.7e-63",
+                                    "name": "BRCA-2_OB3",
+                                    "domain_start": "3052",
+                                    "id": "PF09104.5",
+                                    "domain_stop": "3190"
+                                },
+                                {
+                                    "evalue": "0.00000000004",
+                                    "name": "BRCA2",
+                                    "domain_start": "1837",
+                                    "id": "PF00634.13",
+                                    "domain_stop": "1869"
+                                }
+                            ],
+                            "taxon": "Rattus_norvegicus"
+                        },
+                        {
+                            "name": "Mouse",
+                            "seq_length": 3418,
+                            "domains": [
+                                {
+                                    "evalue": "3.1e-22",
+                                    "name": "Tower",
+                                    "domain_start": "2831",
+                                    "id": "PF09121.5",
+                                    "domain_stop": "2872"
+                                },
+                                {
+                                    "evalue": "9.6e-102",
+                                    "name": "BRCA-2_helical",
+                                    "domain_start": "2479",
+                                    "id": "PF09169.5",
+                                    "domain_stop": "2667"
+                                },
+                                {
+                                    "evalue": "1.7e-63",
+                                    "name": "BRCA-2_OB3",
+                                    "domain_start": "3052",
+                                    "id": "PF09104.5",
+                                    "domain_stop": "3190"
+                                },
+                                {
+                                    "evalue": "0.00000000004",
+                                    "name": "BRCA2",
+                                    "domain_start": "1837",
+                                    "id": "PF00634.13",
+                                    "domain_stop": "1869"
+                                }
+                            ],
+                            "binary_alignment": "00000000000000000100000000000000100000000000000000100000000000000100011000011111011100101100101000000",
+                            "taxon": "Mus_musculus"
+                        }
+                    ]
+                },
+                {
+                    "name": "Plant",
+                    "seq_length": 3418,
+                    "binary_alignment": "00000000000000000100000000000000100000000000000000100000000000000100011000011111011100101100101000000",
+                    "domains": [
+                        {
+                            "evalue": "3.1e-22",
+                            "name": "Tower",
+                            "domain_start": "2831",
+                            "id": "PF09121.5",
+                            "domain_stop": "2872"
+                        },
+                        {
+                            "evalue": "9.6e-102",
+                            "name": "BRCA-2_helical",
+                            "domain_start": "2479",
+                            "id": "PF09169.5",
+                            "domain_stop": "2667"
+                        },
+                        {
+                            "evalue": "1.7e-63",
+                            "name": "BRCA-2_OB3",
+                            "domain_start": "3052",
+                            "id": "PF09104.5",
+                            "domain_stop": "3190"
+                        },
+                        {
+                            "evalue": "0.00000000004",
+                            "name": "BRCA2",
+                            "domain_start": "1837",
+                            "id": "PF00634.13",
+                            "domain_stop": "1869"
+                        }
+                    ],
+                    "taxon": "Arabidopsis_thaliana"
+                }
+            ]
+        }
+    ]
+}

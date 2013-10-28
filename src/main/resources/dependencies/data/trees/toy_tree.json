@@ -1,0 +1,60 @@
+{
+    "name": "root",
+    "taxon": "root",
+    "children": [
+        {
+            "name": "nodex",
+            "taxon": "Homininidae",
+			"children": [
+			{
+				"name": "node1",
+				"taxon": "Homininae",
+				"children": [
+					{
+						"name": "Human",
+						"taxon": "Homo_sapiens"
+					},
+					{
+						"name": "Chimpanzee",
+						"taxon": "Pan_troglodytes",
+						"children": []
+					}
+				]
+				},
+			{
+				"name": "Macaca",
+				"taxon": "Macaca_mulatta",
+				"children": []
+			}
+
+            ]
+        },
+        {
+            "name": "node2",
+            "taxon": "Glires",
+            "children": [
+                {
+                    "name": "node3",
+                    "children": [
+                        {
+                            "name": "Rat",
+                            "taxon": "Rattus_norvegicus",
+							"children": []
+
+                        },
+                        {
+                            "name": "Mouse",
+                            "taxon": "Mus_musculus",
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Plant",
+                    "taxon": "Arabidopsis_thaliana",
+                    "children": []
+                }
+            ]
+        }
+    ]
+}
