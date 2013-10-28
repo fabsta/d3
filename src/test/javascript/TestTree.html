@@ -1,0 +1,615 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+	<head>
+		<!-- Javascript files -->
+
+		<script type="text/javascript" src="../../main/javascript/Biojs.js"></script>
+		<script type="text/javascript" src="../../main/javascript/Biojs.Tree.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../../main/resources/dependencies/d3/d3.v3.min.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../../main/resources/dependencies/phylowidget/tree_functions.js"></script>
+		<script language="JavaScript" type="text/javascript" src="../../main/resources/dependencies/jquery/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="../../main/resources/dependencies/extern/jquery.tipsy.js"></script>
+		
+		<script type="text/javascript" src="../../main/resources/dependencies/extern/newick2.js"></script>
+		
+
+		<link href="../../main/resources/css/Biojs.Tree.css" rel="stylesheet" type="text/css" />
+		<link href="../../main/resources/css/tipsy.css" rel="stylesheet" type="text/css" />
+
+
+		<!-- HTML KICKSTART --> 
+			<!--<script src="http://www.99lime.com/site/templates/js/kickstart.js"></script> 
+			<link rel="stylesheet" href="http://www.99lime.com/site/templates/css/kickstart.css" media="all" />
+		<!-- for use in gist-->
+		
+		<!-- Bootstrap -->
+			<script src="http://getbootstrap.com/dist/js/bootstrap.js"></script> <!-- KICKSTART -->
+			<link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css" media="all" /> <!-- KICKSTART -->
+		
+		
+		
+		<!--
+		<script type="text/javascript" src="http://www.treefam.org/static/javascripts/biojs/Biojs.js"></script>
+		<script type="text/javascript" src="http://www.treefam.org/static/javascripts/biojs/Biojs.Tree.js"></script>
+		<script language="JavaScript" type="text/javascript" src="http://www.treefam.org/static/javascripts//d3/d3.v3.min.js"></script>
+		<script language="JavaScript" type="text/javascript" src="http://www.treefam.org/static/javascripts/biojs/tree_functions.js"></script>
+		<script language="JavaScript" type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="http://www.treefam.org/static/javascripts/jquery/jquery.tipsy.js"></script>
+
+		<script language="JavaScript" type="text/javascript" src="http://www.treefam.org/static/javascripts/jquery/jquery-ui-1.8.2.custom.min.js"></script>
+		<link href="http://www.treefam.org/static/css/Biojs.Tree.css" rel="stylesheet" type="text/css" />
+		<link href="http://www.treefam.org/static/css/tipsy.css" rel="stylesheet" type="text/css" />
+			-->
+		
+
+		<script type="text/javascript">
+//<![CDATA[
+		   
+		var mySequence;
+		window.onload = function() {         
+			
+
+			  //$('.on_off :checkbox').iphoneStyle();
+			  //$('.disabled :checkbox').iphoneStyle();
+			  //$('.css_sized_container :checkbox').iphoneStyle({ resizeContainer: false, resizeHandle: false });
+
+			
+			// set treefam family in header
+			var treefam_family = "TF101003";
+			var treefam_family_genes = "121";
+			var treefam_family_species = "21";
+			var treefam_family_alignment_conservation = "66";
+			var treefam_family_alignment_length = "1213";
+			var treefam_symbol = "CCNI";
+			var treefam_description = "Cyclin";
+			
+			//jQuery("#tf_family").text(treefam_family);
+			//jQuery("#tf_sequences").text(treefam_family_genes);
+			//jQuery("#tf_species").text(treefam_family_species);
+			//jQuery("#tf_alignment_length").text(treefam_family_alignment_conservation);
+			//jQuery("#tf_alignment_conservation").text(treefam_family_alignment_length);
+			
+			jQuery("#cite_panel").html(
+				'TreeFam family '+treefam_family+' has '+treefam_family_genes+' from '+treefam_family_species+' species. '+
+				'The sequences were aligned using MCoffee. The final alignment was '+treefam_family_alignment_length+' AA long '+
+				'and on average '+treefam_family_alignment_conservation+'% conserved. '+
+				'TreeBest (1) was used to build a gene tree and reconcile it with the species tree. '+ 
+				'TreeBest build 5 source trees using nj and Phyml (2). It then merges them into one tree trying to minimize the number of duplications using a species tree.'+
+				'<p id="footnote-1">(1) Ruan,J., Li,H., Chen,Z., Coghlan,A., Coin,L.J.M., Guo,Y., H&eacute;rich&eacute;,J.-K., Hu,Y., Kristiansen,K., Li,R., et al. (2008) TreeFam: 2008 Update. Nucleic Acids Res, 36, D735-40.<\/p> '+
+				'<p id="footnote-2">(2) Guindon,S., Dufayard,J.-F., Lefort,V., Anisimova,M., Hordijk,W. and Gascuel,O. (2010) New algorithms and methods to estimate maximum-likelihood phylogenies: assessing the performance of PhyML 3.0. Syst Biol, 59, 307-321.<\/p> ');
+			
+			
+			jQuery("#family_description").html(' ('+treefam_symbol+','+treefam_description+')');
+			
+			jQuery("#treefam_family").text(treefam_family);
+			jQuery("#treefam_family").attr("href", "http://www.treefam.org/family/" +treefam_family);
+			
+			
+		jQuery("#tree_type_tooltip").tipsy({ 
+				gravity: 'nw', 
+				html: true, 
+				title: function() {
+					var text_string  = "Beside the <b>full gene tree</b> for all species, TreeFam provides a pruned-down version focussing on <b>model</b> organims only";
+				  return text_string; 
+				}
+			});
+			jQuery("#branch_length_tooltip").tipsy({ 
+					gravity: 'nw', 
+					html: true, 
+					title: function() {
+						var text_string  = "Switch between an cladogram and a phylogenetic tree.<br>"
+						text_string += "The cladogram shows the relationships between genes, but does not show real branch length.";
+					  return text_string; 
+					}
+				});
+			jQuery("#labels_tooltip").tipsy({ 
+					gravity: 'nw', 
+					html: true, 
+					title: function() {
+						var text_string  = "Toggle between gene names and UniProt IDs";
+					  return text_string; 
+					}
+				});
+			jQuery("#inner_nodes_tooltip").tipsy({ 
+					gravity: 'nw', 
+					html: true, 
+					title: function() {
+						var text_string  = "Click <i>Bootstrap</i> to see support values for inner nodes.<br>";
+						text_string += "<b>Taxonomy</b> displays internal taxonomic group names";
+					  return text_string; 
+					}
+				});
+			jQuery("#zooming_tooltip").tipsy({ 
+					gravity: 'nw', 
+					html: true, 
+					title: function() {
+						var text_string  = "activate the zoom to use the mouse-wheel on the tree to zoom in.";
+					  return text_string; 
+					}
+				});
+		
+		
+		
+		jQuery("#settings_panel").show();
+		        //$(".show_hide").show();
+
+		 jQuery('#cite_li').click(function(){jQuery("#cite_panel").slideToggle();});
+		 jQuery('#settings_li').click(function(){jQuery("#settings_panel").slideToggle();});
+   		 jQuery('#legend_li').click(function(){jQuery("#legend_panel").slideToggle();});
+		 jQuery('#paste_panel').click(function(){jQuery("#paste_panel").slideToggle();});
+			
+			
+			jQuery('.show_leaf_common_name').click(function(){
+						if (jQuery(this).is(':checked')){ 			myTree.show_gene_annotation();			
+						}});
+			jQuery('.show_leaf_uniprot').click(function(){
+						if (jQuery(this).is(':checked')){			myTree.show_uniprot_annotation();		
+			}});
+			
+			
+			jQuery( ".ultra_branch_length" ).click(function() {		myTree.toggle_branchlength();	});
+			jQuery( ".real_branch_length" ).click(function() {		myTree.toggle_branchlength();	});
+			jQuery( ".show_domains" ).click(function() {			myTree.show_domains();			});
+			jQuery( ".show_alignments" ).click(function() {			myTree.show_alignments();		});
+
+			// bootstrap
+			jQuery('#bootstrap_check').click(function() {
+			        if(jQuery(this).is(":checked")) {myTree.show_bootstrap();}
+					else{myTree.hide_bootstrap();}
+			});
+			jQuery('#taxa_level').click(function() {
+			        if(jQuery(this).is(":checked")) {myTree.show_taxlevel();}
+					else{myTree.hide_taxlevel();}
+			    });
+			
+			// zoom
+			jQuery('.zoom_on').click(function(){
+				console.log("adding zoom");
+				if (jQuery(this).is(':checked')){
+				      myTree.addZoom();
+				}});
+			jQuery('.zoom_off').click(function(){
+				console.log("adding zoom");
+				if (jQuery(this).is(':checked')){
+					      myTree.removeZoom();
+					}});
+			jQuery('.zoom_reset').click(function(){
+					console.log("adding zoom");
+						if (jQuery(this).is(':checked')){
+							     myTree.resetZoom();
+			}});
+
+				
+				/*var $slider = $('input[name="slider1"]');
+
+				$slider.bind('change', function(e) {
+					e.preventDefault();
+					console.log($(this).val());
+					myTree.slideZoom($(this).val());
+				});
+				*/
+			
+				jQuery('#submit_tree').click(function() {
+				  //console.log('Handler for .submit() called.');
+				  var json_tree_string = jQuery('textarea#pasted_tree').val();
+				  //json_tree_string = jQuery("#pasted_tree").val();
+				 // console.log(json_tree_string);
+				  load_from_variable = 0;
+						myTree = new Biojs.Tree({
+							target : "YourOwnDivId",
+					        //tree_target : "tree_panel",
+					        //annot_target : "annotation_panel",
+							two_window: true,
+							tv_contentcontainer : "tv_contentcontainer",
+							annotation_option : '',
+							load_from_web : load_from_web,
+							formatOptions : {
+								tree:'nhx',
+								//tree:'json',
+							},
+							//id : 'P918283',
+							json_tree : model_json_tree, 
+							alignment_file : alignment_file,
+							domains_file : domains_file,
+							species_tree : species_tree,
+							image_path : image_path,
+							newick_tree : newick_tree,
+							highlight_gene : highlight_gene,
+							json_tree_string : json_tree_string,
+							load_from_variable : load_from_variable,
+						});
+				  
+						console.log("well, did we call the tree?");
+				  
+				  return false;
+				});
+			
+			// add cool toolbar
+			//jQuery('#user-toolbar').toolbar({
+			//  content: '#user-toolbar-options', 
+			//  position: 'top'
+			//});
+			
+			//console.log("ready to load stuff");
+			//var model_json_tree = "../../main/resources/dependencies/data/trees/TF105041_model.json";
+			//var full_json_tree = "../../main/resources/dependencies/data/trees/dump_model_tree";
+
+			//TF101002.json
+			//var model_json_tree = "../../main/resources/dependencies/data/trees/TF101002_model.json";
+			//var full_json_tree = "../../main/resources/dependencies/data/trees/TF101002_full.json";
+			//var wormbase_json_tree = "../../main/resources/dependencies/data/trees/TF101002_wormbase.json";
+
+			//TF101107.
+			
+			
+			
+			var alignment_file = "../../main/resources/dependencies/data/trees/just_sequences.json";
+			var domains_file = "../../main/resources/dependencies/data/trees/just_domains.json";
+
+
+			//var model_json_tree = "../../main/resources/dependencies/data/trees/treefam_trees/TF101222_model.json";
+
+			// for testing the reconciled view
+			//var model_json_tree = "../../main/resources/dependencies/data/trees/toy_gene_tree.json";
+			//var species_tree = "../../main/resources/dependencies/data/trees/toy_species_tree.json"
+
+			var species_tree = "../../main/resources/dependencies/data/trees/treefam9.json"
+
+			var model_json_tree = "../../main/resources/dependencies/data/trees/treefam_trees/TF101222_model.json";
+			//var model_json_tree = "../../main/resources/dependencies/data/trees/treefam_trees/TF101222_full.json";
+
+			var full_json_tree = "../../main/resources/dependencies/data/trees/treefam_trees/TF101222_full.json";
+
+			var wormbase_json_tree = "../../main/resources/dependencies/data/trees/treefam_trees/TF101222_wormbase.json";
+			//TF101011.
+			//var model_json_tree = "../../main/resources/dependencies/data/trees/treefam_trees/TF105221_model.json";
+			//var full_json_tree = "../../main/resources/dependencies/data/trees/treefam_trees/TF105221_full.json";
+			//var wormbase_json_tree = "../../main/resources/dependencies/data/trees/treefam_trees/TF333268_wormbase.json";
+			
+			var image_path = "http://www.treefam.org/static/images/species_pictures/species_files/";
+			var highlight_gene = "CCNC_CHICK";
+			//var newick_tree = "../data/trees/newick_tree.nh";
+			var newick_tree = "";
+			var load_from_variable = 0;
+			var load_from_web = 0;
+			var json_tree_string;
+			
+			myTree = new Biojs.Tree({
+					target : "YourOwnDivId",
+			        //tree_target : "tree_panel",
+			        //annot_target : "annotation_panel",
+					two_window: true,
+					tv_contentcontainer : "tv_contentcontainer",
+					format : 'CODATA',
+					load_from_web : load_from_web,
+					formatOptions : {
+						//tree:'nhx',
+						tree:'json',
+					},
+					id : 'P918283',
+					json_tree : model_json_tree, 
+					alignment_file : alignment_file,
+					domains_file : domains_file,
+					species_tree : species_tree,
+					image_path : image_path,
+					newick_tree : newick_tree,
+					highlight_gene : highlight_gene,
+					json_tree_string : json_tree_string,
+					load_from_variable : load_from_variable,
+			}); 
+			
+			
+			$("#full_tree").click(function() {
+				myTree.clear_divs();
+				jQuery('#show_leaf_common_name').attr('checked', true);
+				jQuery('#show_leaf_uniprot').attr('checked', false);
+				jQuery('#bootstrap_check').attr('checked', false);
+				jQuery('#taxa_level').attr('checked', false);
+				jQuery('show_leaf_common_name').attr('checked', true);
+				
+				
+				//myTree.showFullTree();
+				myTree = new Biojs.Tree({
+						target : "YourOwnDivId",
+				        //tree_target : "tree_panel",
+				        //annot_target : "annotation_panel",
+						two_window: true,
+						tv_contentcontainer : "tv_contentcontainer",
+						formatOptions : {
+							tree:'json',
+						},
+						id : 'P918283',
+						// tree parameters
+						json_tree : full_json_tree, 
+						alignment_file : alignment_file,
+						domains_file : domains_file,
+						image_path : image_path,
+						newick_tree : newick_tree,
+						highlight_gene : highlight_gene,
+						json_tree_string : json_tree_string,
+						load_from_variable : load_from_variable,
+				}); 
+
+			});
+			$("#model_tree").click(function() {
+				myTree.clear_divs();
+				
+				//myTree.showModelTree();
+				myTree = new Biojs.Tree({
+						target : "YourOwnDivId",
+				        //tree_target : "tree_panel",
+				        //annot_target : "annotation_panel",
+						tv_contentcontainer : "tv_contentcontainer",
+						formatOptions : {
+							tree:'json',
+						},
+						id : 'P918283',
+						// tree parameters
+						json_tree : model_json_tree, 
+						alignment_file : alignment_file,
+						domains_file : domains_file,
+						
+						image_path : image_path,
+						newick_tree : newick_tree,
+						highlight_gene : highlight_gene,
+						json_tree_string : json_tree_string,
+						load_from_variable : load_from_variable,
+						modelTreeOn : ""
+				}); 
+			});
+			$("#wormbase_tree").click(function() {
+				myTree.showFullTree(full_json_tree);
+				
+				/*myTree.clear_divs();
+				
+				//myTree.showModelTree();
+				myTree = new Biojs.Tree({
+						target : "tree",
+				        tree_target : "tree_panel",
+				        annot_target : "annotation_panel",
+						tv_contentcontainer : "tv_contentcontainer",
+						formatOptions : {
+							tree:'json',
+						},
+						id : 'P918283',
+						// tree parameters
+						json_tree : wormbase_json_tree, 
+						alignment_file : alignment_file,
+						domains_file : domains_file,
+						
+						image_path : image_path,
+						newick_tree : newick_tree,
+						highlight_gene : highlight_gene,
+						json_tree_string : json_tree_string,
+						load_from_variable : load_from_variable,
+						modelTreeOn : ""
+				});  */
+			});
+
+
+		};      
+
+				   
+		//]]>
+		</script>
+		<title></title>
+	</head>
+	<body>
+		<!-- <div class="tv_contentcontainer" id="tv_contentcontainer">
+			<div class="tv_breadcrumbs"> -->
+				<div class="row">
+				  <div class="col-md-12">				
+				
+				<div id="popup_menu" style="border=1; display:none; background-color:#black; color:#2D006B; text-decoration:none;border:1px solid #12127D;">
+					<ul>
+						<li>show all</li>
+						<li>show none</li>
+					</ul>
+				</div>
+				<a class="settings-button pressed" id="button-right" name="button-right"></a> 
+				<a href="http://www.treefam.org"><img src="http://www.treefam.org/static/images/treefam_logo.png" alt="TreeFam" height="35"  /></a> 
+				gene tree for family <a id="treefam_family" href="" name="treefam_family"></a><div id="family_description" style="display: inline"></div><br />
+				Genes: <span class="badge">42</span>
+				Species: <span class="badge">99</span>
+				Range: <span class="badge">Nematodes</span><br>
+				Download: <span class="label label-default">Tree</span>  <span class="label label-default">Alignment</span>
+				
+				
+				<!--<div class="panel-group" id="accordion">
+				  <div class="panel panel-default">
+				    <div class="panel-heading">
+				      <h4 class="panel-title">
+				        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+				          Citation
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="collapseOne" class="panel-collapse collapse">
+				      <div class="panel-body">
+				        <div id="cite_panel" class="panel"></div>
+				      </div>
+				    </div>
+				  </div>
+
+				  
+				</div> -->
+				
+				<ul id="toggle-view">
+
+					<li id="li_head">
+						<h3 id="cite_li">
+							How to cite this tree
+						</h3><span >+</span>
+						<div id="cite_panel" class="panel"></div>
+					</li>
+					<li id="li_head">
+						<h3 id="cite_li"> Upload your tree here
+					</h3><span >+</span>
+					<div id="paste_panel" class="panel">
+						<textarea rows="4" cols="50" id="pasted_tree" form="usrform">
+							paste tree here...</textarea>
+							<button type="button" id="submit_tree" class="btn btn-xs btn-success">Submit</button>
+					</div>
+					</li>
+					
+					
+					<li id="li_head">
+						<h3 id="settings_li">
+							Control elements
+						</h3><span >+</span>
+						<div id="settings_panel" style="padding-left: 10px;" class="panel">
+							<div class="settings">
+							<div class="left">
+								<label for="tree_type" class="fixedwidth">Tree type</label>
+								<img id="tree_type_tooltip" title="Click for information about this field" src="http://cc.skoda-auto.com/che/style/ltr/nci_default/icon_info.png" style="vertical-align: bottom;" alt="info" width="10">
+								<ul>
+									<li>
+										<input type="radio" class="radioinput" name="tree_type" id="model_tree" value="model_tree" checked="checked"> 
+										<label for="model_tree" class="radiolabel">Model</label>
+									</li>
+									<li>
+										<input type="radio" class="radioinput" name="tree_type" id="wormbase_tree" value="wormbase_tree"> 
+										<label for="wormbase_tree" class="radiolabel">Wormbase</label>
+									</li>
+									<li>
+										<input type="radio" class="radioinput" name="tree_type" id="full_tree" value="full_tree"> 
+										<label for="full_tree" class="radiolabel">Full</label>
+									</li>
+								</ul>
+							</div>
+							<div class="middle">
+								<label for="branch_length" class="fixedwidth">Branch length</label>
+								<img id="branch_length_tooltip" title="Click for information about this field" src="http://cc.skoda-auto.com/che/style/ltr/nci_default/icon_info.png" style="vertical-align: bottom;" alt="info" width="10">
+								<ul>
+									<li>
+										<input type="radio" class="ultra_branch_length" name="br_length" id="branch_length" value="real_branch" checked="checked"> <label for="tran_code_22" class="branch_length">Cladogram</label>
+									</li>
+									<li>
+										<input type="radio" class="real_branch_length" name="br_length" id="branch_length" value="real_branch"> <label for="tran_code_21" class="branch_length">Real</label>
+									</li>
+								</ul>
+							</div>
+							<div class="right">
+								<label for="leaf_annotation" class="fixedwidth">Leaf labels</label>
+								<img id="labels_tooltip" title="Click for information about this field" src="http://cc.skoda-auto.com/che/style/ltr/nci_default/icon_info.png" style="vertical-align: bottom;" alt="info" width="10">
+								<ul>
+									<li>
+										<input type="radio" class="show_leaf_common_name" name="leaf_annot" id="show_leaf_common_name" value="leaf_annotation" checked="checked"> <label for="gene_label" class="leaf_annotation">Gene name</label>
+									</li>
+									<li>
+										<input type="radio" class="show_leaf_uniprot" name="leaf_annot" id="uniprot" value="leaf_annotation"> <label for="uniprot" class="leaf_annotation">UniProtKB</label>
+									</li>
+								</ul>
+							</div>
+							<div class="right3">
+								<label for="inner_nodes" class="fixedwidth">Internal labels</label>
+								<img id="inner_nodes_tooltip" title="Click for information about this field" src="http://cc.skoda-auto.com/che/style/ltr/nci_default/icon_info.png" style="vertical-align: bottom;" alt="info" width="10">
+								<ul>
+									<li>
+										<input type="checkbox" class="bootstrap_check" name="bootstrap" id="bootstrap_check" value="leaf_annotation" > <label for="gene_label" class="leaf_annotation">Bootstrap</label>
+									</li>
+									<li>
+										<input type="checkbox" class="int_names" name="taxa_level" id="taxa_level" value="leaf_annotation"> <label for="uniprot" class="leaf_annotation">Taxonomy</label>
+									</li>
+								</ul>
+							</div>
+	
+							<div class="right2">
+								<label for="tran_code" class="fixedwidth">Mouse Zooming</label>
+								<img id="zooming_tooltip" title="Click for information about this field" src="http://cc.skoda-auto.com/che/style/ltr/nci_default/icon_info.png" style="vertical-align: bottom;" alt="info" width="10">
+								<ul>
+									<li>
+										<input type="radio" class="zoom_on" name="tran_code" id="zoom_on" value="zoom_on"> <label for="zoom_on" class="radiolabel">On</label>
+									</li>
+									<li>
+										<input type="radio" class="zoom_off" name="tran_code" id="zoom_off" value="zoom_off" checked="checked"> <label for="zoom_off" class="radiolabel">Off</label>
+									</li>
+
+								</ul>
+								
+							</div>
+							
+							<div class="right4">
+								<label for="annotation" class="fixedwidth">Annotation</label>
+								<img id="zooming_tooltip" title="Click for information about this field" src="http://cc.skoda-auto.com/che/style/ltr/nci_default/icon_info.png" style="vertical-align: bottom;" alt="info" width="10">
+								<ul>
+									<li>
+										<input type="radio" class="show_domains" name="tran_code" id="show_domains" value="show_domains" checked="checked"> <label for="show_domains" class="radiolabel">Domains</label>
+									</li>
+									<li>
+										<input type="radio" class="show_alignments" name="tran_code" id="show_alignments" value="show_alignments" > <label for="show_alignments" class="radiolabel">Alignments</label>
+									</li>
+
+
+								</ul>
+							</div>
+							
+	
+						</div>
+					</li>
+				</ul>
+				
+				<!--<div class="btn-group">
+				  <button type="button" class="btn btn-default btn-lg btn-sm"><span class=".glyphicon .glyphicon-tree-conifer"></span>Tree type</button>
+				  <button type="button" class="btn btn-default btn-lg btn-sm dropdown-toggle" data-toggle="dropdown">
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li class="active"><a href="#">Model organism</a></li>
+				    <li><a href="#">Wormbase</a></li>
+				    <li><a href="#">All species</a></li>
+				  </ul>
+			    </div>
+			    <div class="btn-group">
+
+				  <button type="button" class="btn btn-default btn-lg btn-sm ">Branch length</button>
+				  <button type="button" class="btn btn-default btn-lg btn-sm  dropdown-toggle" data-toggle="dropdown">
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li class="active"><a href="#">ultrametric</a></li>
+				    <li><a href="#">real</a></li>
+				  </ul>
+			  </div>
+  				<div class="btn-group">
+				  <button type="button" class="btn btn-default btn-lg btn-sm ">Leaf labels</button>
+				  <button type="button" class="btn btn-default btn-lg btn-sm  dropdown-toggle" data-toggle="dropdown">
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li class="active"><a href="#">Gene name</a></li>
+				    <li><a href="#">UniProt</a></li>
+				  </ul>
+				</div>
+				
+  				<div class="btn-group">
+				  <button type="button" class="btn btn-default btn-lg btn-sm ">Internal labels</button>
+				  <button type="button" class="btn btn-default btn-lg btn-sm  dropdown-toggle" data-toggle="dropdown">
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li class="active"><a href="#">Bootstrap</a></li>
+				    <li><a href="#">Taxonomy</a></li>
+				  </ul>
+				</div>
+				
+				-->
+				
+
+				<div id="YourOwnDivId" class="row">
+				     <!-- <div id="tree_panel" class="col-md-6"></div>
+				      <div id="annotation_panel" class="col-md-6"></div>
+						 -->
+				</div>
+					
+				</div>
+				
+				<div class="clearfloat"></div>
+	
+			</div> 
+		</div>
+		
+		
+	</body>
+</html>
